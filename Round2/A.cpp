@@ -36,6 +36,7 @@ int solve() {
     V[x][1] = -i;
   }
 
+
   sort(V.begin(), V.end());
   return V[0][2];
 }
