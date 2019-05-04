@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
 
-int solve()
+long long int solve()
 {
   int N, L;
   std::cin >> N >> L;
@@ -10,18 +10,33 @@ int solve()
   for(int i=0; i<N; i++) std::cin >> PC[i][1];
 
   std::sort(PC.begin(), PC.end());
-  std::vector<int> mr(N+1, 0);
-  for(int i=N-1; i>=0; i--)
-    mr[i] = std::max(mr[i+1], PC[i][1]);
+  std::vector<std::vector<long long int>> DP(2, std::vector<long long int>(N+2, 0));
 
-  int sol=0;
-  for(int i=0; i<N; i++)
+  std::vector<long long int> S0(N+2, 0);
+  std::vector<long long int> S1(N+2, 0);
+
+  long long int mm=0;
+  // 0 non prendo
+  // 1 prendo
+  for(int i=N-1; i>=0; i--)
   {
-    auto pos = std::lower_bound(PC.begin(), PC.end(), std::array<int, 2>{PC[i][0]+L+1, -1}) - PC.begin();
-    sol = std::max(sol, PC[i][1]+mr[pos]);
+    DP[0][i] = mm;//std::max(DP[0][i+1], DP[1][i+1]);
+    DP[1][i] = PC[i][1];
+
+    for(int j=N-1; j>i; j--)
+    {
+      if(PC[j][0] - PC[i][0] > L)
+      {
+        DP[1][i] = std::max(DP[1][i], PC[i][1]+S1[j]);
+      }
+    }
+
+    S0[i] = std::max(S0[i+1], DP[0][i]);
+    S1[i] = std::max(S1[i+1], DP[1][i]);
+    mm = std::max(mm, std::max(DP[0][i], DP[1][i]));
   }
 
-  return sol;
+  return mm; // std::max(DP[0][0], DP[1][0]);
 }
 
 int main()
@@ -31,5 +46,3 @@ int main()
   for(int i=0; i<T; i++) std::cout << solve() << std::endl;
   return 0;
 }
-
-
