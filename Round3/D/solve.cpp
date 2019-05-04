@@ -8,18 +8,17 @@ int count;
 
 std::vector<int> RMQ;
 
-
-  void init(int p, int L, int R) {
-    if (L == R){
-      RMQ[p] = L;
-    }
-    else {
-      init(2*(p), L, (L + R) / 2);
-      init(2*(p)+1, (L + R) / 2 + 1, R);
-      int p1 = RMQ[2*(p)], p2 = RMQ[2*(p)+1];
-      RMQ[p] = (S[p1] <= S[p2]) ? p1 : p2;
-    }
+void init(int p, int L, int R) {
+  if (L == R){
+    RMQ[p] = L;
   }
+  else {
+    init(2*(p), L, (L + R) / 2);
+    init(2*(p)+1, (L + R) / 2 + 1, R);
+    int p1 = RMQ[2*(p)], p2 = RMQ[2*(p)+1];
+    RMQ[p] = (S[p1] <= S[p2]) ? p1 : p2;
+  }
+}
 
 int rmq(int p, int L, int R, int i, int j) {  
   if (i > R || j < L) return -1;       
